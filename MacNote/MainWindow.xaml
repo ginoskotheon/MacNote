@@ -1,0 +1,50 @@
+﻿<Window x:Class="MacNote.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:control="clr-namespace:MacNote.Controls"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="1500" Width="1000" Padding="10,10,10,10" Background="#FF575353">
+
+    <Grid Name="TheGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.ColumnSpan="2" Grid.Row="2" Name="NoteMenu" HorizontalAlignment="Stretch" Height="880" Margin="10,10,0,0" VerticalAlignment="Top" Width="Auto">
+            <control:SidebarMenuControl x:Name="sbMC" Margin="0,0,10,0"/>
+        </StackPanel>
+        <Menu Name="EditMenu"  VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" Margin="200,5,47,0" Padding="5,5,5,5" Grid.Row="1" Grid.Column="1" Height="40" VerticalAlignment="Top">
+            <Button Click="ClickCut" Height="25" Padding="5,2">
+                <Image Source="Resources/icons8-scissors-50.png"/>
+            </Button>
+            <Button Click="ClickCopy" Height="25" Padding="5,2">
+                <Image Source="Resources/icons8-copy-50.png" />
+            </Button>
+            <Button Click="ClickPaste" Height="25">
+                <Image Source="Resources/icons8-paste-50.png" />
+            </Button>
+            <Button Click="ClickSelectAll" Content="Select All" Height="25"/>
+            <Button Click="ClickUndo" Height="25">
+                <Image Source="Resources/icons8-undo-50.png" />
+            </Button>
+            <Button Click="ClickRedo" Height="25">
+                <Image Source="Resources/icons8-redo-50.png" />
+            </Button>
+            <Rectangle Height="20" Width="1" Margin="2" Stroke="Black" />
+            <TextBlock Text="Ctrl + S to save"/>
+        </Menu>
+        <Menu HorizontalAlignment="Stretch" Height="22" Margin="0,0,0,0" VerticalAlignment="Top"  Grid.ColumnSpan="2" Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="New"/>
+            </MenuItem>
+            <MenuItem Header="Tools"/>
+        </Menu>
+    </Grid>
+</Window>

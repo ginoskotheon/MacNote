@@ -1,0 +1,143 @@
+﻿<UserControl x:Class="MacNote.Controls.SidebarMenuControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MacNote.Controls"
+             xmlns:data="clr-namespace:MacNote.Models"
+             xmlns:control="clr-namespace:MacNote.Controls"
+             xmlns:viewModel="clr-namespace:MacNote.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="1200" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModel:PageViewModel></viewModel:PageViewModel>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVis" />
+        <DataTemplate DataType="{x:Type data:Paged}">
+            <TextBlock Text="{Binding Path = Title, Mode=OneWay}" Width="70" Height="150" Margin="3" />
+        </DataTemplate>
+        <ControlTemplate x:Key="ButtonControlTemplate1" TargetType="{x:Type Button}">
+            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                   CornerRadius="5" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" 
+                                  ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" 
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                  Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" 
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsDefaulted" Value="True">
+                    <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" TargetName="border" Value="#FF0000"/>
+                    <Setter Property="BorderBrush" TargetName="border" Value="#FF3C7FB1"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" TargetName="border" Value="#FFC4E5F6"/>
+                    <Setter Property="BorderBrush" TargetName="border" Value="#FF2C628B"/>
+                </Trigger>
+                <Trigger Property="ToggleButton.IsChecked" Value="True">
+                    <Setter Property="Background" TargetName="border" Value="#FFBCDDEE"/>
+                    <Setter Property="BorderBrush" TargetName="border" Value="#FF245A83"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" TargetName="border" Value="#FFF4F4F4"/>
+                    <Setter Property="BorderBrush" TargetName="border" Value="#FFADB2B5"/>
+                    <Setter Property="Foreground" Value="#FF838383"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Stretch" Height="880" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="155"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="640"></RowDefinition>
+            <RowDefinition Height="100"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.Row="0">
+            <TextBlock Text="{Binding ViewPage.Title}" Foreground="#ffffff" FontSize="24"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <ListBox ItemsSource="{Binding Pages}"
+                SelectedItem="{Binding Path=ViewPage}" 
+                ScrollViewer.CanContentScroll="True"
+                ScrollViewer.VerticalScrollBarVisibility="Visible"
+                Height="640"
+                Grid.Row="0"
+                     VerticalAlignment="Top">
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="BorderBrush" Value="#cccccc" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </StackPanel>
+        <DockPanel Grid.Row="2" Grid.Column="0">
+            <Button Content="Add New"             
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="0,10,5,0"
+                    Command="{Binding VisibleCommand}"
+                    Width="70"
+                    Height="50"
+                    Template="{DynamicResource ButtonControlTemplate1}"/>
+            <Button Content="Delete"             
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="0,10,5,0"
+                    Command="{Binding DeleteCommand}"
+                    Width="70"
+                    Height="50"
+                    Template="{DynamicResource ButtonControlTemplate1}"/>
+        </DockPanel>
+        <TextBox Grid.Column="1" Grid.Row="1" Name="Test" 
+                 Text="{Binding ViewPage.Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                 Margin="34,0" VerticalAlignment="Top"  HorizontalAlignment="Stretch" Height="640"
+                 AcceptsReturn="True">
+            <TextBox.InputBindings>
+                <KeyBinding 
+                    Key="S"
+                    Modifiers="Ctrl"
+                    Command="{Binding UpdateCommand}" 
+                    CommandParameter="{Binding Path=Text, 
+                    RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <Grid Name="NewTitle" Grid.Column="1"  Visibility="{Binding myVisibility, Converter={StaticResource boolToVis}}" Width="200">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"></RowDefinition>
+                <RowDefinition Height="75"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Background="#CCCCCC">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                        <ColumnDefinition Width="*" ></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Name="Title" Text=""/>
+                    <Button Grid.Column="1" Name="CloseBox" Content="X" Click="Button_Click" HorizontalContentAlignment="Center" Margin="0,2,2,0" Foreground="Red"/>
+                </Grid>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Background="AliceBlue">
+                <TextBox  Height="25"
+                        Name="txtBox" HorizontalAlignment="Stretch" 
+                        VerticalAlignment = "Stretch" Width = "100" 
+                        Text="{Binding NewTitle}"/>
+                <Button 
+                    Command="{Binding AddCommand}"
+                    Click="Button_Click" Template="{DynamicResource ButtonControlTemplate1}"
+                    >Add Title</Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
